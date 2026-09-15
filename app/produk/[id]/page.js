@@ -3,6 +3,7 @@ import { notFound } from 'next/navigation';
 import { ambilProdukById } from '../../../lib/queries';
 import { formatRupiah } from '../../../lib/format';
 import DetailTambahForm from '../../../components/DetailTambahForm';
+import GambarProduk from '../../../components/GambarProduk';
 
 export const dynamic = 'force-dynamic';
 
@@ -33,14 +34,7 @@ export default async function DetailProdukPage({ params }) {
 
         <div className="detail-layout">
           <div className="detail-gambar">
-            {/* eslint-disable-next-line @next/next/no-img-element */}
-            <img
-              src={gambarSrc}
-              alt={produk.nama_produk}
-              onError={(e) => {
-                e.currentTarget.src = '/images/produk/placeholder.svg';
-              }}
-            />
+            <GambarProduk src={gambarSrc} alt={produk.nama_produk} />
           </div>
 
           <div className="detail-info">
