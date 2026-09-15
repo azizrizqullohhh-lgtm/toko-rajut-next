@@ -1,3 +1,5 @@
+import Link from 'next/link';
+
 export default function Footer() {
   return (
     <footer className="site-footer">
@@ -14,11 +16,10 @@ export default function Footer() {
 
         <div className="footer-col">
           <h4>Navigasi</h4>
-          <a href="/">Beranda</a>
-          <a href="/produk">Produk</a>
-          <a href="/tentang">Tentang Kami</a>
-          <a href="/kontak">Kontak</a>
-          <a href="/kontak">Admin</a>
+          <Link href="/">Beranda</Link>
+          <Link href="/produk">Produk</Link>
+          <Link href="/tentang">Tentang Kami</Link>
+          <Link href="/kontak">Kontak</Link>
         </div>
 
         <div className="footer-col">
@@ -30,12 +31,7 @@ export default function Footer() {
           <a href="https://instagram.com/tokorajutsuparman" target="_blank" rel="noopener noreferrer">
             @tokorajutsuperman
           </a>
-          <a href="file:///D:/Tugas%20Serkom/profil-pribadi/index.html#about" target="_blank" rel="noopener noreferrer">
-            Profil Pribadi
-          </a>
-          <a href="http://localhost:3000/admin/login" target="_blank" rel="noopener noreferrer">
-            Admin
-          </a>
+          <Link href="/admin/login">Admin</Link>
         </div>
       </div>
 
