@@ -24,15 +24,17 @@ export default function Footer() {
 
         <div className="footer-col">
           <h4>Hubungi Kami</h4>
-          <a href="https://wa.me/6287786702861" target="_blank" rel="noopener noreferrer">
+          <Link href="https://wa.me/6287786702861" target="_blank" rel="noopener noreferrer">
             WhatsApp: +62 877-8670-2861
-          </a>
-          <a href="mailto:halo@tokorajutsuperman.id">halo@tokorajutsuperman.id</a>
-          <a href="https://instagram.com/tokorajutsuparman" target="_blank" rel="noopener noreferrer">
+          </Link>
+          <Link href="mailto:halo@tokorajutsuperman.id">halo@tokorajutsuperman.id</Link>
+          <Link href="https://instagram.com/tokorajutsuparman" target="_blank" rel="noopener noreferrer">
             @tokorajutsuperman
-          </a>
+          </Link>
           <Link href="/admin/login">Admin</Link>
-           <a href="">foto profil</a>
+           <Link href="https://profil-pribadi-zeta.vercel.app" target="_blank" rel="noopener noreferrer">
+            foto profil
+          </Link>
         </div>
       </div>
 
