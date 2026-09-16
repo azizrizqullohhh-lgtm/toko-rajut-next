@@ -26,10 +26,10 @@ export default function LoginForm({ redirectTo }) {
       )}
 
       <label htmlFor="username">Username</label>
-      <input type="text" id="username" name="username" placeholder="bos" required autoFocus />
+      <input type="text" id="username" name="username" placeholder="Masukkan username" required autoFocus />
 
       <label htmlFor="password">Password</label>
-      <input type="password" id="password" name="password" placeholder="*******" required />
+      <input type="password" id="password" name="password" placeholder="Masukkan password" required />
 
       <TombolMasuk />
     </form>
