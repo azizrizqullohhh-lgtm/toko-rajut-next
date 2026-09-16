@@ -32,6 +32,7 @@ export default function Footer() {
             @tokorajutsuperman
           </a>
           <Link href="/admin/login">Admin</Link>
+           <a href="">foto profil</a>
         </div>
       </div>
 
