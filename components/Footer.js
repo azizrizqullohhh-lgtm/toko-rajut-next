@@ -32,10 +32,10 @@ export default function Footer() {
             @tokorajutsuperman
           </Link>
           <Link href="/admin/login">Admin</Link>
-           <Link href="https://profil-pribadi-zeta.vercel.app" target="_blank" rel="noopener noreferrer">
+           <Link href="https://profil-pribadi-zeta.vercel.app">
             foto profil
           </Link>
-        </div>
+               </div>
       </div>
 
       <div className="footer-bottom">
