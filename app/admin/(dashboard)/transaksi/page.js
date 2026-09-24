@@ -1,7 +1,7 @@
 import Link from 'next/link';
-import { ambilSemuaTransaksi, ambilLaporanTransaksi } from '../../../../lib/queries';
-import { formatRupiah, formatTanggalWaktu } from '../../../../lib/format';
-import PrintReportModal from '../../../../components/PrintReportModal';
+import { ambilSemuaTransaksi } from '../../../../lib/queries';
+import { formatRupiah, formatTanggalWaktu, formatTanggalWaktuRingkas } from '../../../../lib/format';
+import PrintButton from '../../../../components/PrintButton';
 
 export const metadata = { title: 'Transaksi & Laporan' };
 export const dynamic = 'force-dynamic';
@@ -23,15 +23,15 @@ export default async function AdminTransaksiPage({ searchParams }) {
   const adaFilter = Boolean(kataKunci || status || dari || sampai);
 
   const transaksiList = await ambilSemuaTransaksi({ kataKunci, status, dari, sampai });
-  const laporanTransaksi = await ambilLaporanTransaksi({ kataKunci, status, dari, sampai });
-  const laporanSiapCetak = laporanTransaksi.map((t) => ({
-    ...t,
-    dibuat_pada: new Date(t.dibuat_pada).toISOString(),
-  }));
 
   const totalPendapatan = transaksiList
     .filter((t) => t.status !== 'dibatalkan')
     .reduce((total, t) => total + Number(t.total_harga), 0);
+
+  const totalItemTerjual = transaksiList.reduce(
+    (total, t) => total + (t.items || []).reduce((sub, item) => sub + Number(item.jumlah), 0),
+    0
+  );
 
   return (
     <>
@@ -43,7 +43,7 @@ export default async function AdminTransaksiPage({ searchParams }) {
             <strong>{formatRupiah(totalPendapatan)}</strong>.
           </p>
         </div>
-        <PrintReportModal transaksi={laporanSiapCetak} />
+        <PrintButton label="Cetak Laporan" />
       </div>
 
       <div className="admin-card no-print">
@@ -103,38 +103,77 @@ export default async function AdminTransaksiPage({ searchParams }) {
               : 'Belum ada transaksi masuk dari checkout.'}
           </p>
         ) : (
-          <div className="admin-table-wrap">
-            <table className="admin-table">
-              <thead>
-                <tr>
-                  <th>Kode</th>
-                  <th>Pembeli</th>
-                  <th>Tanggal</th>
-                  <th>Total</th>
-                  <th>Status</th>
-                </tr>
-              </thead>
-              <tbody>
-                {transaksiList.map((t) => (
-                  <tr key={t.id_transaksi}>
-                    <td>{t.kode_transaksi}</td>
-                    <td>
-                      {t.nama_pembeli}
-                      <br />
-                      <span className="admin-table-sub">{t.telepon_pembeli}</span>
-                    </td>
-                    <td>{formatTanggalWaktu(t.dibuat_pada)}</td>
-                    <td>{formatRupiah(t.total_harga)}</td>
-                    <td>
-                      <span className={`status-pill status-${t.status}`}>
-                        {LABEL_STATUS[t.status] || t.status}
-                      </span>
-                    </td>
+          <>
+            <div className="admin-table-wrap no-print">
+              <table className="admin-table">
+                <thead>
+                  <tr>
+                    <th>Kode</th>
+                    <th>Pembeli</th>
+                    <th>Tanggal</th>
+                    <th>Total</th>
+                    <th>Status</th>
                   </tr>
-                ))}
-              </tbody>
-            </table>
-          </div>
+                </thead>
+                <tbody>
+                  {transaksiList.map((t) => (
+                    <tr key={t.id_transaksi}>
+                      <td>{t.kode_transaksi}</td>
+                      <td>
+                        {t.nama_pembeli}
+                        <br />
+                        <span className="admin-table-sub">{t.telepon_pembeli}</span>
+                      </td>
+                      <td>{formatTanggalWaktu(t.dibuat_pada)}</td>
+                      <td>{formatRupiah(t.total_harga)}</td>
+                      <td>
+                        <span className={`status-pill status-${t.status}`}>
+                          {LABEL_STATUS[t.status] || t.status}
+                        </span>
+                      </td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
+
+            <div className="print-only-receipt">
+              {transaksiList.map((t) => (
+                <div className="receipt-entry" key={t.id_transaksi}>
+                  <div className="receipt-line receipt-line-head">
+                    <span>#{t.id_transaksi}</span>
+                    <span>{formatTanggalWaktuRingkas(t.dibuat_pada)}</span>
+                  </div>
+                  {(t.items || []).map((item) => (
+                    <div key={item.id_item}>
+                      <div className="receipt-item-nama">{item.nama_produk}</div>
+                      <div className="receipt-line">
+                        <span>
+                          {item.jumlah} x {formatRupiah(item.harga_satuan)}
+                        </span>
+                        <span>{formatRupiah(item.subtotal)}</span>
+                      </div>
+                    </div>
+                  ))}
+                  <div className="receipt-divider" />
+                </div>
+              ))}
+
+              <div className="receipt-line">
+                <span>Transaksi</span>
+                <span>{transaksiList.length}</span>
+              </div>
+              <div className="receipt-line">
+                <span>Item Terjual</span>
+                <span>{totalItemTerjual} pcs</span>
+              </div>
+              <div className="receipt-line receipt-total">
+                <span>TOTAL</span>
+                <span>{formatRupiah(totalPendapatan)}</span>
+              </div>
+              <p className="receipt-terima-kasih">Terima kasih</p>
+            </div>
+          </>
         )}
       </div>
     </>
