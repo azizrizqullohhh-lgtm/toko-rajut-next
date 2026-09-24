@@ -1,7 +1,7 @@
 import Link from 'next/link';
-import { ambilSemuaTransaksi } from '../../../../lib/queries';
+import { ambilSemuaTransaksi, ambilLaporanTransaksi } from '../../../../lib/queries';
 import { formatRupiah, formatTanggalWaktu } from '../../../../lib/format';
-import PrintButton from '../../../../components/PrintButton';
+import PrintReportModal from '../../../../components/PrintReportModal';
 
 export const metadata = { title: 'Transaksi & Laporan' };
 export const dynamic = 'force-dynamic';
@@ -23,6 +23,11 @@ export default async function AdminTransaksiPage({ searchParams }) {
   const adaFilter = Boolean(kataKunci || status || dari || sampai);
 
   const transaksiList = await ambilSemuaTransaksi({ kataKunci, status, dari, sampai });
+  const laporanTransaksi = await ambilLaporanTransaksi({ kataKunci, status, dari, sampai });
+  const laporanSiapCetak = laporanTransaksi.map((t) => ({
+    ...t,
+    dibuat_pada: new Date(t.dibuat_pada).toISOString(),
+  }));
 
   const totalPendapatan = transaksiList
     .filter((t) => t.status !== 'dibatalkan')
@@ -38,7 +43,7 @@ export default async function AdminTransaksiPage({ searchParams }) {
             <strong>{formatRupiah(totalPendapatan)}</strong>.
           </p>
         </div>
-        <PrintButton label="Cetak Laporan" />
+        <PrintReportModal transaksi={laporanSiapCetak} />
       </div>
 
       <div className="admin-card no-print">
