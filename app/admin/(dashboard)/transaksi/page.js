@@ -1,6 +1,7 @@
 import Link from 'next/link';
 import { ambilSemuaTransaksi } from '../../../../lib/queries';
-import { formatRupiah } from '../../../../lib/format';
+import { formatRupiah, formatTanggalWaktu } from '../../../../lib/format';
+import PrintButton from '../../../../components/PrintButton';
 
 export const metadata = { title: 'Transaksi & Laporan' };
 export const dynamic = 'force-dynamic';
@@ -29,13 +30,18 @@ export default async function AdminTransaksiPage({ searchParams }) {
 
   return (
     <>
-      <h1 className="admin-title">Transaksi &amp; Laporan Penjualan</h1>
-      <p className="admin-subtitle">
-        {transaksiList.length} transaksi{adaFilter ? ' sesuai filter' : ' tercatat'} — total pendapatan{' '}
-        <strong>{formatRupiah(totalPendapatan)}</strong>.
-      </p>
+      <div className="admin-title-row">
+        <div>
+          <h1 className="admin-title">Transaksi &amp; Laporan Penjualan</h1>
+          <p className="admin-subtitle">
+            {transaksiList.length} transaksi{adaFilter ? ' sesuai filter' : ' tercatat'} — total pendapatan{' '}
+            <strong>{formatRupiah(totalPendapatan)}</strong>.
+          </p>
+        </div>
+        <PrintButton label="Cetak Laporan" />
+      </div>
 
-      <div className="admin-card">
+      <div className="admin-card no-print">
         <form action="/admin/transaksi" method="get" className="admin-filter-form">
           <div className="admin-filter-field">
             <label htmlFor="q">Cari</label>
@@ -83,7 +89,8 @@ export default async function AdminTransaksiPage({ searchParams }) {
         </form>
       </div>
 
-      <div className="admin-card">
+      <div className="admin-card print-area">
+        <h2 className="print-only-title">Laporan Transaksi Toko Rajut</h2>
         {transaksiList.length === 0 ? (
           <p className="empty-state">
             {adaFilter
@@ -111,7 +118,7 @@ export default async function AdminTransaksiPage({ searchParams }) {
                       <br />
                       <span className="admin-table-sub">{t.telepon_pembeli}</span>
                     </td>
-                    <td>{new Date(t.dibuat_pada).toLocaleString('id-ID')}</td>
+                    <td>{formatTanggalWaktu(t.dibuat_pada)}</td>
                     <td>{formatRupiah(t.total_harga)}</td>
                     <td>
                       <span className={`status-pill status-${t.status}`}>

@@ -1114,3 +1114,76 @@ h1, h2, h3{
 .status-dikirim{background: rgba(124,142,92,0.18); color:#4c5c33;}
 .status-selesai{background: rgba(124,142,92,0.25); color:#3a4a24;}
 .status-dibatalkan{background: rgba(193,85,44,0.15); color: var(--rust-dark);}
+
+/* ---------- Cetak (print) ---------- */
+.print-only-title{display:none;}
+
+@media print{
+  /* Sembunyikan semua yang tidak perlu dicetak */
+  .admin-sidebar,
+  .no-print,
+  header,
+  footer{
+    display:none !important;
+  }
+
+  html, body{
+    background:#fff !important;
+    color:#000 !important;
+  }
+
+  .admin-shell{
+    display:block !important;
+  }
+
+  .admin-content{
+    padding:0 !important;
+    max-width:100% !important;
+  }
+
+  .admin-title-row{
+    margin-bottom:14px;
+  }
+
+  .admin-card{
+    border:none !important;
+    box-shadow:none !important;
+    padding:0 !important;
+    margin-bottom:0 !important;
+  }
+
+  .print-only-title{
+    display:block;
+    font-size:1.2rem;
+    margin-bottom:12px;
+  }
+
+  .admin-table-wrap{
+    overflow:visible !important;
+  }
+
+  .admin-table{
+    width:100% !important;
+    font-size:0.82rem;
+  }
+
+  .admin-table th, .admin-table td{
+    border:1px solid #999 !important;
+  }
+
+  .status-pill{
+    background:none !important;
+    color:#000 !important;
+    padding:0;
+    border-radius:0;
+    font-weight:700;
+  }
+
+  a[href]:after{
+    content:"";
+  }
+
+  @page{
+    margin: 16mm 12mm;
+  }
+}
