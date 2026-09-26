@@ -25,7 +25,8 @@ export default function AdminDashboardLayout({ children }) {
           <Link href="/admin">Dashboard</Link>
           <Link href="/admin/produk">Produk</Link>
           <Link href="/admin/kategori">Kategori</Link>
-          <Link href="/admin/transaksi">Transaksi &amp; Laporan</Link>
+          <Link href="/admin/transaksi">Transaksi</Link>
+          <Link href="/admin/laporan">Laporan</Link>
         </nav>
         <div className="admin-sidebar-bottom">
           <Link href="/" className="admin-link-muted">
