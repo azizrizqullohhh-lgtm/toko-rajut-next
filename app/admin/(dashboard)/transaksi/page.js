@@ -96,6 +96,7 @@ export default async function AdminTransaksiPage({ searchParams }) {
                   <th>Tanggal</th>
                   <th>Total</th>
                   <th>Status</th>
+                  <th>Aksi</th>
                 </tr>
               </thead>
               <tbody>
@@ -111,6 +112,16 @@ export default async function AdminTransaksiPage({ searchParams }) {
                     <td>{formatRupiah(t.total_harga)}</td>
                     <td>
                       <UbahStatusSelect idTransaksi={t.id_transaksi} statusAwal={t.status} />
+                    </td>
+                    <td>
+                    <Link
+                         href={`/admin/struk/${t.id_transaksi}`}
+                         target="_blank"
+                         rel="noopener noreferrer"
+                         className="btn-mini"
+                        >
+                         Cetak Struk
+                    </Link>
                     </td>
                   </tr>
                 ))}

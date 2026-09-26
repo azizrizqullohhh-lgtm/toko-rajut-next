@@ -1252,4 +1252,8 @@ h1, h2, h3{
   @page{
     margin: 16mm 12mm;
   }
+
+  .struk-page{max-width: 480px; margin: 40px auto; padding: 0 16px;}
+  .struk-toolbar{display:flex; justify-content:space-between; align-items:center; margin-bottom:20px; gap:12px; flex-wrap:wrap;}
+  .struk-card{max-width:480px;}
 }
