@@ -1,6 +1,7 @@
 import Link from 'next/link';
 import { ambilSemuaTransaksi } from '../../../../lib/queries';
-import { formatRupiah } from '../../../../lib/format';
+import { formatRupiah, formatTanggalWaktu, formatTanggalWaktuRingkas } from '../../../../lib/format';
+import PrintButton from '../../../../components/PrintButton';
 import UbahStatusSelect from './UbahStatusSelect';
 
 export const metadata = { title: 'Transaksi & Laporan' };
@@ -28,15 +29,25 @@ export default async function AdminTransaksiPage({ searchParams }) {
     .filter((t) => t.status !== 'dibatalkan')
     .reduce((total, t) => total + Number(t.total_harga), 0);
 
+  const totalItemTerjual = transaksiList.reduce(
+    (total, t) => total + (t.items || []).reduce((sub, item) => sub + Number(item.jumlah), 0),
+    0
+  );
+
   return (
     <>
-      <h1 className="admin-title">Transaksi &amp; Laporan Penjualan</h1>
-      <p className="admin-subtitle">
-        {transaksiList.length} transaksi{adaFilter ? ' sesuai filter' : ' tercatat'} — total pendapatan{' '}
-        <strong>{formatRupiah(totalPendapatan)}</strong>.
-      </p>
+      <div className="admin-title-row">
+        <div>
+          <h1 className="admin-title">Transaksi &amp; Laporan Penjualan</h1>
+          <p className="admin-subtitle">
+            {transaksiList.length} transaksi{adaFilter ? ' sesuai filter' : ' tercatat'} — total pendapatan{' '}
+            <strong>{formatRupiah(totalPendapatan)}</strong>.
+          </p>
+        </div>
+        <PrintButton label="Cetak Laporan" />
+      </div>
 
-      <div className="admin-card">
+      <div className="admin-card no-print">
         <form action="/admin/transaksi" method="get" className="admin-filter-form">
           <div className="admin-filter-field">
             <label htmlFor="q">Cari</label>
@@ -84,7 +95,8 @@ export default async function AdminTransaksiPage({ searchParams }) {
         </form>
       </div>
 
-      <div className="admin-card">
+      <div className="admin-card print-area">
+        <h2 className="print-only-title">Laporan Transaksi Toko Rajut</h2>
         {transaksiList.length === 0 ? (
           <p className="empty-state">
             {adaFilter
@@ -92,36 +104,75 @@ export default async function AdminTransaksiPage({ searchParams }) {
               : 'Belum ada transaksi masuk dari checkout.'}
           </p>
         ) : (
-          <div className="admin-table-wrap">
-            <table className="admin-table">
-              <thead>
-                <tr>
-                  <th>Kode</th>
-                  <th>Pembeli</th>
-                  <th>Tanggal</th>
-                  <th>Total</th>
-                  <th>Status</th>
-                </tr>
-              </thead>
-              <tbody>
-                {transaksiList.map((t) => (
-                  <tr key={t.id_transaksi}>
-                    <td>{t.kode_transaksi}</td>
-                    <td>
-                      {t.nama_pembeli}
-                      <br />
-                      <span className="admin-table-sub">{t.telepon_pembeli}</span>
-                    </td>
-                    <td>{new Date(t.dibuat_pada).toLocaleString('id-ID')}</td>
-                    <td>{formatRupiah(t.total_harga)}</td>
-                    <td>
-                      <UbahStatusSelect idTransaksi={t.id_transaksi} statusAwal={t.status} />
-                    </td>
+          <>
+            <div className="admin-table-wrap no-print">
+              <table className="admin-table">
+                <thead>
+                  <tr>
+                    <th>Kode</th>
+                    <th>Pembeli</th>
+                    <th>Tanggal</th>
+                    <th>Total</th>
+                    <th>Status</th>
                   </tr>
-                ))}
-              </tbody>
-            </table>
-          </div>
+                </thead>
+                <tbody>
+                  {transaksiList.map((t) => (
+                    <tr key={t.id_transaksi}>
+                      <td>{t.kode_transaksi}</td>
+                      <td>
+                        {t.nama_pembeli}
+                        <br />
+                        <span className="admin-table-sub">{t.telepon_pembeli}</span>
+                      </td>
+                      <td>{formatTanggalWaktu(t.dibuat_pada)}</td>
+                      <td>{formatRupiah(t.total_harga)}</td>
+                      <td>
+                        <UbahStatusSelect idTransaksi={t.id_transaksi} statusAwal={t.status} />
+                      </td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
+
+            <div className="print-only-receipt">
+              {transaksiList.map((t) => (
+                <div className="receipt-entry" key={t.id_transaksi}>
+                  <div className="receipt-line receipt-line-head">
+                    <span>#{t.id_transaksi}</span>
+                    <span>{formatTanggalWaktuRingkas(t.dibuat_pada)}</span>
+                  </div>
+                  {(t.items || []).map((item) => (
+                    <div key={item.id_item}>
+                      <div className="receipt-item-nama">{item.nama_produk}</div>
+                      <div className="receipt-line">
+                        <span>
+                          {item.jumlah} x {formatRupiah(item.harga_satuan)}
+                        </span>
+                        <span>{formatRupiah(item.subtotal)}</span>
+                      </div>
+                    </div>
+                  ))}
+                  <div className="receipt-divider" />
+                </div>
+              ))}
+
+              <div className="receipt-line">
+                <span>Transaksi</span>
+                <span>{transaksiList.length}</span>
+              </div>
+              <div className="receipt-line">
+                <span>Item Terjual</span>
+                <span>{totalItemTerjual} pcs</span>
+              </div>
+              <div className="receipt-line receipt-total">
+                <span>TOTAL</span>
+                <span>{formatRupiah(totalPendapatan)}</span>
+              </div>
+              <p className="receipt-terima-kasih">Terima kasih</p>
+            </div>
+          </>
         )}
       </div>
     </>
