@@ -2,6 +2,7 @@ import Link from 'next/link';
 import { ambilSemuaTransaksi } from '../../../../lib/queries';
 import { formatRupiah, formatTanggalWaktu } from '../../../../lib/format';
 import UbahStatusSelect from './UbahStatusSelect';
+import CetakStrukButton from '../../../../components/CetakStrukButton';
 
 export const metadata = { title: 'Transaksi' };
 export const dynamic = 'force-dynamic';
@@ -114,14 +115,7 @@ export default async function AdminTransaksiPage({ searchParams }) {
                       <UbahStatusSelect idTransaksi={t.id_transaksi} statusAwal={t.status} />
                     </td>
                     <td>
-                    <Link
-                         href={`/admin/struk/${t.id_transaksi}`}
-                         target="_blank"
-                         rel="noopener noreferrer"
-                         className="btn-mini"
-                        >
-                         Cetak Struk
-                    </Link>
+                        <CetakStrukButton idTransaksi={t.id_transaksi} />
                     </td>
                   </tr>
                 ))}
