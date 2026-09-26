@@ -1114,6 +1114,23 @@ h1, h2, h3{
 .status-dikirim{background: rgba(124,142,92,0.18); color:#4c5c33;}
 .status-selesai{background: rgba(124,142,92,0.25); color:#3a4a24;}
 .status-dibatalkan{background: rgba(193,85,44,0.15); color: var(--rust-dark);}
+.status-select-wrap{display:flex; flex-direction:column; gap:4px;}
+.status-select{
+  font-family: var(--sans);
+  border: 1px solid transparent;
+  cursor: pointer;
+  appearance: none;
+  -webkit-appearance: none;
+  padding-right: 26px;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='6' viewBox='0 0 10 6'%3E%3Cpath fill='%23806a52' d='M0 0l5 6 5-6z'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 10px center;
+}
+.status-select:hover{border-color: var(--border);}
+.status-select:focus{outline:none; border-color: var(--rust);}
+.status-select:disabled{opacity:0.7; cursor: wait;}
+.status-select-info{font-size:0.72rem; color: var(--brown-soft);}
+.status-select-error{font-size:0.72rem; color: var(--rust-dark); font-weight:700;}
 
 /* ---------- Cetak (print) ---------- */
 .print-only-title{display:none;}
